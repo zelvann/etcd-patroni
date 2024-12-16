@@ -3,7 +3,10 @@ package config
 import "github.com/spf13/viper"
 
 type appEnv struct {
-	ApiPort string `mapstructure:"PORT"`
+	ApiPort        string `mapstructure:"API_PORT"`
+	MinioEndpoint  string `mapstructure:"MINIO_ENDPOINT"`
+	MinioAccessKey string `mapstructure:"MINIO_ACCESS_KEY"`
+	MinioSecretKey string `mapstructure:"MINIO_SECRET_KEY"`
 }
 
 func LoadEnv() *appEnv {

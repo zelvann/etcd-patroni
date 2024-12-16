@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/zelvann/minio-ds/internal/config"
@@ -11,6 +12,12 @@ import (
 
 func main() {
 	env := config.LoadEnv()
+
+	minioClient, err := instance.NewMinio(env.MinioEndpoint, env.MinioAccessKey, env.MinioSecretKey)
+	if err != nil {
+		log.Fatalf("Failed to create minio client: %v", err)
+	}
+	fmt.Println(minioClient)
 
 	server := instance.NewGin()
 	server.Use(middleware.CORS())
