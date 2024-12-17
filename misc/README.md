@@ -1,1 +1,0 @@
-*In order to build docker image for etcd-patroni-citus, I use some code from [patroni repository](https://github.com/patroni/patroni)*
