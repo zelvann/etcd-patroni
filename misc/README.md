@@ -1,13 +1,1 @@
-[template]
-#prefix = "/service/batman"
-#owner = "haproxy"
-#mode = "0644"
-src = "haproxy.tmpl"
-dest = "/etc/haproxy/haproxy.cfg"
-
-check_cmd = "/usr/sbin/haproxy -c -f {{ .src }}"
-reload_cmd = "haproxy -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid -D -sf $(cat /var/run/haproxy.pid)"
-
-keys = [
-    "/",
-]
+*In order to build docker image for etcd-patroni-citus, I use some code from [patroni repository](https://github.com/patroni/patroni)*
