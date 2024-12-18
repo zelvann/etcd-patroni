@@ -13,7 +13,7 @@ func NewMinio(endpoint string, ak string, sk string) (*minio.Client, error) {
 		endpoint,
 		&minio.Options{
 			Creds:  credentials.NewStaticV4(ak, sk, ""),
-			Secure: true,
+			Secure: false,
 		},
 	)
 	if err != nil {
