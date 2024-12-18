@@ -8,8 +8,7 @@ services:
       ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
       ETCD_INITIAL_CLUSTER: etcd-1=http://etcd-1:2380,etcd-2=http://etcd-2:2380,etcd-3=http://etcd-3:2380
       ETCD_INITIAL_CLUSTER_STATE: new
-      ETCD_INITIAL_CLUSTER_TOKEN: tutor
-      ETCD_UNSUPPORTED_ARCH: arm64
+      ETCD_INITIAL_CLUSTER_TOKEN: tkn
     container_name: etcd-1
     hostname: etcd-1
     command: etcd --name etcd-1 --initial-advertise-peer-urls http://etcd-1:2380
@@ -31,15 +30,13 @@ services:
     hostname: haproxy
     container_name: haproxy
     ports:
-      - 5000:5000
+      - 5000:5000 # Access to coordinator primary
       - 5001:5001 # LB
     command: haproxy
     environment: &haproxy_env
       ETCDCTL_ENDPOINTS: http://etcd-1:2379,http://etcd-2:2379,http://etcd-3:2379
       PATRONI_ETCD3_HOSTS: "'etcd-1:2379','etcd-2:2379','etcd-3:2379'"
-      PATRONI_SCOPE: demo
       PATRONI_CITUS_GROUP: 0
-      PATRONI_CITUS_DATABASE: citus
       PGSSLMODE: verify-ca
       PGSSLKEY: /etc/ssl/private/ssl-cert-snakeoil.key
       PGSSLCERT: /etc/ssl/certs/ssl-cert-snakeoil.pem
