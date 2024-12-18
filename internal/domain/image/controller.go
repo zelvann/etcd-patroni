@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	bucketName = "images"
+	BucketName = "images"
 )
 
 type Controller struct {
@@ -35,7 +35,7 @@ func (c *Controller) UploadImage(ctx *gin.Context) {
 
 	filename := filepath.Base(header.Filename)
 
-	_, err = c.minioClient.PutObject(ctx, bucketName, filename, file, header.Size, minio.PutObjectOptions{
+	_, err = c.minioClient.PutObject(ctx, BucketName, filename, file, header.Size, minio.PutObjectOptions{
 		ContentType: header.Header.Get("Content-Type"),
 	})
 	if err != nil {
@@ -49,7 +49,7 @@ func (c *Controller) UploadImage(ctx *gin.Context) {
 func (c *Controller) GetImage(ctx *gin.Context) {
 	filename := ctx.Param("filename")
 
-	object, err := c.minioClient.GetObject(ctx, bucketName, filename, minio.GetObjectOptions{})
+	object, err := c.minioClient.GetObject(ctx, BucketName, filename, minio.GetObjectOptions{})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, utils.NewFailedResponse("Failed to get image", err.Error()))
 		return
@@ -63,7 +63,7 @@ func (c *Controller) GetImage(ctx *gin.Context) {
 func (c *Controller) ListImages(ctx *gin.Context) {
 	var images []string
 
-	objectCh := c.minioClient.ListObjects(ctx, bucketName, minio.ListObjectsOptions{})
+	objectCh := c.minioClient.ListObjects(ctx, BucketName, minio.ListObjectsOptions{})
 	for object := range objectCh {
 		if object.Err != nil {
 			ctx.JSON(http.StatusInternalServerError, utils.NewFailedResponse("Failed to list images", object.Err.Error()))
@@ -78,7 +78,7 @@ func (c *Controller) ListImages(ctx *gin.Context) {
 func (c *Controller) DeleteImage(ctx *gin.Context) {
 	filename := ctx.Param("filename")
 
-	err := c.minioClient.RemoveObject(ctx, bucketName, filename, minio.RemoveObjectOptions{})
+	err := c.minioClient.RemoveObject(ctx, BucketName, filename, minio.RemoveObjectOptions{})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, utils.NewFailedResponse("Failed to delete image", err.Error()))
 		return
