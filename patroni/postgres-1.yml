@@ -1,0 +1,55 @@
+scope: sister
+name: postgresql-1
+
+# all future changes to the bootstrap.dcs section of the YAML configuration will not take any effect! 
+# If you want to change them please use either patronictl edit-config or the Patroni REST API.
+bootstrap:
+  dcs:
+    # loop_wait + 2 * retry_timeout <= ttl
+    loop_wait: 10
+    ttl: 30
+    retry_timeout: 10
+    maximum_lag_on_failover: 1048576
+    synchronous_mode: quorum
+    postgresql:
+      use_pg_rewind: true
+      pg_hba:
+      - host replication replicator 127.0.0.1/32 md5
+      - host all all 0.0.0.0/0 md5
+  initdb:  
+  - encoding: UTF8
+  - data-checksums
+
+citus:
+  database: demo-sister
+  group: 1  # worker
+
+etcd3:
+  host: 127.0.0.1:2379
+
+postgresql:
+  authentication:
+    superuser:
+      username: postgres
+      password: patroni
+    replication:
+      username: replicator
+      password: rep-pass
+    rewind: 
+      username: rewind_user 
+      password: rewind_password
+  connect_address: 127.0.0.1:5433
+  data_dir: data/postgresql-1
+  listen: 127.0.0.1:5433
+  pgpass: /tmp/pgpass0
+
+restapi:
+  listen: 127.0.0.1:8009
+  connect_address: 127.0.0.1:8009
+ authentication:
+   username: username 
+   password: password
+
+tags:
+    noloadbalance: false
+    clonefrom: false
