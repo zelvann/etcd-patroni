@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
+	"github.com/minio/minio-go/v7"
 	"github.com/zelvann/minio-ds/internal/config"
 	"github.com/zelvann/minio-ds/internal/domain/icmp"
+	"github.com/zelvann/minio-ds/internal/domain/image"
 	"github.com/zelvann/minio-ds/internal/instance"
 	"github.com/zelvann/minio-ds/internal/middleware"
 )
@@ -23,6 +26,18 @@ func main() {
 	server.Use(middleware.CORS())
 
 	icmp.Route(server)
+
+	err = minioClient.MakeBucket(context.Background(), "images", minio.MakeBucketOptions{})
+	if err != nil {
+		exists, errBucketExists := minioClient.BucketExists(context.Background(), "images")
+		if errBucketExists == nil && exists {
+			log.Printf("Bucket 'images' already exists")
+		} else {
+			log.Fatal(err)
+		}
+	}
+
+	image.Route(server, minioClient)
 
 	if env.ApiPort == "" {
 		env.ApiPort = "8080"
