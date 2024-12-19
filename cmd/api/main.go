@@ -5,7 +5,6 @@ import (
 
 	"github.com/zelvann/minio-ds/internal/config"
 	"github.com/zelvann/minio-ds/internal/domain/icmp"
-	"github.com/zelvann/minio-ds/internal/domain/image"
 	"github.com/zelvann/minio-ds/internal/domain/product"
 	"github.com/zelvann/minio-ds/internal/instance"
 	"github.com/zelvann/minio-ds/internal/middleware"
@@ -14,22 +13,25 @@ import (
 func main() {
 	env := config.LoadEnv()
 
+	db := instance.NewPostgres(env.DBHost, env.DBUser, env.DBPassword, env.DBName, env.DBPort)
+	if err := db.AutoMigrate(&product.ProductSchema{}); err != nil {
+		log.Fatalf("Failed to migrate database: %v", err)
+	}
+
 	minioClient, err := instance.NewMinio(env.MinioEndpoint, env.MinioAccessKey, env.MinioSecretKey)
 	if err != nil {
 		log.Fatalf("Failed to create minio client: %v", err)
 	}
 
-	db := instance.NewPostgres(env.DBHost, env.DBUser, env.DBPassword, env.DBName, env.DBPort)
-	if err := db.AutoMigrate(&product.Product{}); err != nil {
-		log.Fatalf("Failed to migrate database: %v", err)
-	}
+	productRepository := product.NewProductRepository(db)
+	productUsecase := product.NewProductUsecase(productRepository, minioClient)
+	productController := product.NewProductController(productUsecase)
 
 	server := instance.NewGin()
 	server.Use(middleware.CORS())
 
+	product.Route(server, productController)
 	icmp.Route(server)
-	image.Route(server, minioClient)
-	product.Route(server, db, minioClient)
 
 	if env.ApiPort == "" {
 		env.ApiPort = "8080"

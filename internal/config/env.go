@@ -9,7 +9,7 @@ type appEnv struct {
 	MinioSecretKey string `mapstructure:"MINIO_SECRET_KEY"`
 	DBHost         string `mapstructure:"DB_HOST"`
 	DBUser         string `mapstructure:"DB_USER"`
-	DBPassword     string `mapstructure:"DB_PASSWORD"`
+	DBPassword     string `mapstructure:"DB_PASS"`
 	DBName         string `mapstructure:"DB_NAME"`
 	DBPort         string `mapstructure:"DB_PORT"`
 }

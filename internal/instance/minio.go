@@ -1,24 +1,12 @@
 package instance
 
-import (
-	"fmt"
-
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/credentials"
-)
+import "github.com/minio/minio-go"
 
 func NewMinio(endpoint string, ak string, sk string) (*minio.Client, error) {
-	fmt.Printf("Creating Minio client with endpoint: %s\n", endpoint)
-	client, err := minio.New(
+	return minio.New(
 		endpoint,
-		&minio.Options{
-			Creds:  credentials.NewStaticV4(ak, sk, ""),
-			Secure: false,
-		},
+		ak,
+		sk,
+		false,
 	)
-	if err != nil {
-		fmt.Printf("Error creating Minio client: %v\n", err)
-		return nil, err
-	}
-	return client, nil
 }
