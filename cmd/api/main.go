@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 
-	"github.com/zelvann/minio-ds/internal/config"
-	"github.com/zelvann/minio-ds/internal/domain/icmp"
-	"github.com/zelvann/minio-ds/internal/domain/product"
-	"github.com/zelvann/minio-ds/internal/instance"
-	"github.com/zelvann/minio-ds/internal/middleware"
+	"github.com/zelvann/etcd-patroni/internal/config"
+	"github.com/zelvann/etcd-patroni/internal/domain/icmp"
+	"github.com/zelvann/etcd-patroni/internal/domain/product"
+	"github.com/zelvann/etcd-patroni/internal/instance"
+	"github.com/zelvann/etcd-patroni/internal/middleware"
 )
 
 func main() {

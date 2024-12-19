@@ -1,4 +1,4 @@
-module github.com/zelvann/minio-ds
+module github.com/zelvann/etcd-patroni
 
 go 1.22.2
 

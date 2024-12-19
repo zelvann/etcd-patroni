@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/minio/minio-go"
-	"github.com/zelvann/minio-ds/internal/utils"
+	"github.com/zelvann/etcd-patroni/internal/utils"
 	"gorm.io/gorm"
 )
 
