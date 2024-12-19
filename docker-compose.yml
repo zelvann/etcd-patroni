@@ -1,4 +1,19 @@
 services:
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio
+    networks:
+      - net
+    ports:
+      - "9000:9000" # API
+      - "9001:9001" # Console
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - ./disk1:/disk1
+    command: server /disk1 --console-address ":9001"
+    restart: always
   etcd-1: &etcd
     image: zelvann/patroni-etcd-citus
     networks:
